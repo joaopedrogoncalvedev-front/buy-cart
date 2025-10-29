@@ -1,5 +1,8 @@
 import { BsCartPlus } from "react-icons/bs";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { CartContext } from "../../contexts/CartContext";
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 import { api } from '../../services/api';
 
@@ -13,6 +16,7 @@ export interface ProductProps{
 }
 
 export function Home(){
+    const { addItemCart } = useContext(CartContext);
     const [products, setProducts] = useState<ProductProps[]>([]);
 
 
@@ -26,7 +30,16 @@ export function Home(){
     // Adiciona novo item ao carrinho
 
     function handleAddCartItem(product: ProductProps){
-        console.log(product)
+        toast.success("Produto adicionado no carrinho.", {
+            style:{
+                borderRadius: 10,
+                backgroundColor : "#121212",
+                color: "#fff"
+            }
+        }
+
+        )
+        addItemCart(product);
         }
     
 
@@ -49,11 +62,13 @@ export function Home(){
 
                     {products.map((product) => (
                          <section className="w-full" key={product.id}>
+                        <Link to={`/product/${product.id}`}>
                         <img
                             className="w-full rounded-lg max-h-70 mb-2"
                             src={product.cover}
                              alt={product.title} />
                              <p className="font-medium mt-1 mb-2">{product.title}</p>
+                             </Link>
                              <div className="flex gap-3 items-center">
                                 <strong className="text-zinc-700/90">
                                     {product.price.toLocaleString(
